@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+import sys
 import urllib.parse
 import urllib.request
 
@@ -15,13 +16,27 @@ LOGIN_API_URL = 'https://www.toontownrewritten.com/api/login?format=json'
 
 
 def start_engine(engine_path, gameserver, playcookie, **kwargs):
+    env = {
+        'TTR_GAMESERVER': gameserver,
+        'TTR_PLAYCOOKIE': playcookie,
+    }
+    if sys.platform == 'darwin':
+        toontown_library_path = os.path.join(
+            os.path.expanduser('~'), 'Library',
+            'Application Support', 'Toontown Rewritten',
+        )
+        env['DYLD_LIBRARY_PATH'] = os.path.join(
+            toontown_library_path,
+            'Libraries.bundle',
+        )
+        env['DYLD_FRAMEWORK_PATH'] = os.path.join(
+            toontown_library_path,
+            'Frameworks',
+        )
     return subprocess.Popen(
         args=[engine_path],
         cwd=os.path.dirname(engine_path),
-        env={
-            'TTR_GAMESERVER': gameserver,
-            'TTR_PLAYCOOKIE': playcookie,
-        },
+        env=env,
         **kwargs,
     )
 
