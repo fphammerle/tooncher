@@ -15,6 +15,13 @@ https://github.com/ToontownRewritten/api-doc/blob/master/invasions.md
 INVASIONS_API_URL = 'https://www.toontownrewritten.com/api/invasions?format=json'
 LOGIN_API_URL = 'https://www.toontownrewritten.com/api/login?format=json'
 
+if sys.platform == 'darwin':
+    TOONTOWN_LIBRARY_PATH = os.path.join(
+        os.path.expanduser('~'), 'Library',
+        'Application Support', 'Toontown Rewritten',
+    )
+else:
+    TOONTOWN_LIBRARY_PATH = None
 
 def start_engine(engine_path, gameserver, playcookie, **kwargs):
     env = {
@@ -22,16 +29,12 @@ def start_engine(engine_path, gameserver, playcookie, **kwargs):
         'TTR_PLAYCOOKIE': playcookie,
     }
     if sys.platform == 'darwin':
-        toontown_library_path = os.path.join(
-            os.path.expanduser('~'), 'Library',
-            'Application Support', 'Toontown Rewritten',
-        )
         env['DYLD_LIBRARY_PATH'] = os.path.join(
-            toontown_library_path,
+            TOONTOWN_LIBRARY_PATH,
             'Libraries.bundle',
         )
         env['DYLD_FRAMEWORK_PATH'] = os.path.join(
-            toontown_library_path,
+            TOONTOWN_LIBRARY_PATH,
             'Frameworks',
         )
     return subprocess.Popen(
