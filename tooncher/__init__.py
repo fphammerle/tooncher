@@ -1,5 +1,6 @@
 import json
 import os
+import ssl
 import subprocess
 import sys
 import urllib.parse
@@ -41,11 +42,13 @@ def start_engine(engine_path, gameserver, playcookie, **kwargs):
     )
 
 
-def api_request(url, params=None):
+def api_request(url, params=None, validate_ssl_cert=True):
     resp = urllib.request.urlopen(
         url=url,
         data=urllib.parse.urlencode(params).encode('ascii')
             if params else None,
+        context=None if validate_ssl_cert
+            else ssl._create_unverified_context(),
     )
     return json.loads(resp.read().decode('ascii'))
 
@@ -63,7 +66,8 @@ class LoginDelayed:
         self.queue_token = queue_token
 
 
-def login(username=None, password=None, queue_token=None):
+def login(username=None, password=None,
+          queue_token=None, validate_ssl_cert=True):
     if username is not None and queue_token is None:
         assert password is not None
         req_params = {
@@ -79,6 +83,7 @@ def login(username=None, password=None, queue_token=None):
     resp_data = api_request(
         url=LOGIN_API_URL,
         params=req_params,
+        validate_ssl_cert=validate_ssl_cert,
     )
     if resp_data['success'] == 'true':
         return LoginSuccessful(
@@ -93,13 +98,17 @@ def login(username=None, password=None, queue_token=None):
         raise Exception(repr(resp_data))
 
 
-def launch(engine_path, username, password):
+def launch(engine_path, username, password, validate_ssl_certs=True):
     result = login(
         username=username,
         password=password,
+        validate_ssl_cert=validate_ssl_certs,
     )
     if isinstance(result, LoginDelayed):
-        result = login(queue_token=result.queue_token)
+        result = login(
+            queue_token=result.queue_token,
+            validate_ssl_cert=validate_ssl_certs,
+        )
     if isinstance(result, LoginSuccessful):
         p = start_engine(
             engine_path=engine_path,
