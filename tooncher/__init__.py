@@ -20,8 +20,14 @@ if sys.platform == 'darwin':
         os.path.expanduser('~'), 'Library',
         'Application Support', 'Toontown Rewritten',
     )
+    TOONTOWN_ENGINE_DEFAULT_PATH = os.path.join(
+        TOONTOWN_LIBRARY_PATH,
+        'Toontown Rewritten',
+    )
 else:
     TOONTOWN_LIBRARY_PATH = None
+    TOONTOWN_ENGINE_DEFAULT_PATH = None
+
 
 def start_engine(engine_path, gameserver, playcookie, **kwargs):
     env = {

@@ -51,10 +51,11 @@ def _init_argparser():
         '-e',
         metavar='path',
         dest='engine_path',
-        default=None,
+        default=tooncher.TOONTOWN_ENGINE_DEFAULT_PATH,
         help='\n'.join([
             'path to toontown engine.',
             'this overrides the one specified in config file',
+            '(default: %(default)s)',
         ]),
     )
     argparser.add_argument(
