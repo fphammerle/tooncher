@@ -15,10 +15,11 @@ def run(username, config_path, engine_path=None, validate_ssl_certs=True):
     else:
         config = {}
 
-    if engine_path is None and 'engine_path' in config:
-        engine_path = config['engine_path']
-    else:
-        raise Exception('missing path to toontown engine')
+    if engine_path is None:
+        if 'engine_path' in config:
+            engine_path = config['engine_path']
+        else:
+            raise Exception('missing path to toontown engine')
 
     accounts = config['accounts'] if 'accounts' in config else []
 
@@ -44,6 +45,17 @@ def _init_argparser():
         dest='config_path',
         help='path to config file (default: %(default)s)',
         default=os.path.join(os.path.expanduser('~'), '.tooncher'),
+    )
+    argparser.add_argument(
+        '--engine-path',
+        '-e',
+        metavar='path',
+        dest='engine_path',
+        default=None,
+        help='\n'.join([
+            'path to toontown engine.',
+            'this overrides the one specified in config file',
+        ]),
     )
     argparser.add_argument(
         '--no-ssl-cert-validation',
