@@ -44,6 +44,19 @@ def start_engine(engine_path, gameserver, playcookie, **kwargs):
             TOONTOWN_LIBRARY_PATH,
             'Frameworks',
         )
+    elif sys.platform == 'linux' and 'XAUTHORITY' in os.environ:
+        """ 
+        Fix for TTREngine reporting:
+        > :display:x11display(error): Could not open display ":0.0".
+        > :ToonBase: Default graphics pipe is glxGraphicsPipe (OpenGL).
+        > :ToonBase(warning): Unable to open 'onscreen' window.
+        > Traceback (most recent call last):
+        >   File "<compiled '__voltorbmain__'>", line 0, in <module>
+        >   [...]
+        >   File "<compiled 'direct.vlt8f63e471.ShowBase'>", line 0, in vltf05fd21b
+        > Exception: Could not open window.
+        """
+        env['XAUTHORITY'] = os.environ['XAUTHORITY']
     return subprocess.Popen(
         args=[engine_path],
         cwd=os.path.dirname(engine_path),
