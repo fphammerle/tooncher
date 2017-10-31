@@ -7,7 +7,7 @@ import glob
 setup(
     name = 'tooncher',
     packages = ['tooncher'],
-    version = '0.3.1',
+    version = '0.4.0',
     description = "automates toontown rewritten's login process",
     author = 'Fabian Peter Hammerle',
     author_email = 'fabian.hammerle@gmail.com',
