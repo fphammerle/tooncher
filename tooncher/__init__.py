@@ -45,7 +45,7 @@ def start_engine(engine_path, gameserver, playcookie, **kwargs):
             'Frameworks',
         )
     elif sys.platform == 'linux' and 'XAUTHORITY' in os.environ:
-        """ 
+        """
         Fix for TTREngine reporting:
         > :display:x11display(error): Could not open display ":0.0".
         > :ToonBase: Default graphics pipe is glxGraphicsPipe (OpenGL).
@@ -121,7 +121,8 @@ def login(username=None, password=None,
         raise Exception(repr(resp_data))
 
 
-def launch(engine_path, username, password, validate_ssl_certs=True):
+def launch(engine_path, username, password, validate_ssl_certs=True,
+           cpu_limit_percent=None):
     result = login(
         username=username,
         password=password,
@@ -138,6 +139,13 @@ def launch(engine_path, username, password, validate_ssl_certs=True):
             gameserver=result.gameserver,
             playcookie=result.playcookie,
         )
+        if cpu_limit_percent is not None:
+            subprocess.Popen(args=[
+                'cpulimit',
+                '--pid', str(p.pid),
+                '--limit', str(cpu_limit_percent),
+                # '--verbose',
+            ])
         p.wait()
     else:
         raise Exception(repr(result))

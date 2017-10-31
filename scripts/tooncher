@@ -7,7 +7,8 @@ import tooncher
 import yaml
 
 
-def run(username, config_path, engine_path=None, validate_ssl_certs=True):
+def run(username, config_path, engine_path=None, validate_ssl_certs=True,
+        cpu_limit_percent=None):
 
     if os.path.exists(config_path):
         with open(config_path) as f:
@@ -30,6 +31,7 @@ def run(username, config_path, engine_path=None, validate_ssl_certs=True):
                 username=account['username'],
                 password=account['password'],
                 validate_ssl_certs=validate_ssl_certs,
+                cpu_limit_percent=cpu_limit_percent,
             )
 
 
@@ -64,6 +66,14 @@ def _init_argparser():
         dest='validate_ssl_certs',
         help='do not validate ssl certificates',
         action='store_false',
+    )
+    argparser.add_argument(
+        '--cpu-limit',
+        dest='cpu_limit_percent',
+        type=int,
+        default=None,
+        help='maximally allowed cpu usage in percent'
+            + ' (requires cpulimit command, default: %(default)s)',
     )
     return argparser
 
