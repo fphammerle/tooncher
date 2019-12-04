@@ -13,17 +13,15 @@ https://github.com/ToontownRewritten/api-doc/blob/master/login.md
 https://github.com/ToontownRewritten/api-doc/blob/master/invasions.md
 """
 
-INVASIONS_API_URL = 'https://www.toontownrewritten.com/api/invasions?format=json'
-LOGIN_API_URL = 'https://www.toontownrewritten.com/api/login?format=json'
+INVASIONS_API_URL = "https://www.toontownrewritten.com/api/invasions?format=json"
+LOGIN_API_URL = "https://www.toontownrewritten.com/api/login?format=json"
 
-if sys.platform == 'darwin':
+if sys.platform == "darwin":
     TOONTOWN_LIBRARY_PATH = os.path.join(
-        os.path.expanduser('~'), 'Library',
-        'Application Support', 'Toontown Rewritten',
+        os.path.expanduser("~"), "Library", "Application Support", "Toontown Rewritten",
     )
     TOONTOWN_ENGINE_DEFAULT_PATH = os.path.join(
-        TOONTOWN_LIBRARY_PATH,
-        'Toontown Rewritten',
+        TOONTOWN_LIBRARY_PATH, "Toontown Rewritten",
     )
 else:
     TOONTOWN_LIBRARY_PATH = None
@@ -32,19 +30,15 @@ else:
 
 def start_engine(engine_path, gameserver, playcookie, **kwargs):
     env = {
-        'TTR_GAMESERVER': gameserver,
-        'TTR_PLAYCOOKIE': playcookie,
+        "TTR_GAMESERVER": gameserver,
+        "TTR_PLAYCOOKIE": playcookie,
     }
-    if sys.platform == 'darwin':
-        env['DYLD_LIBRARY_PATH'] = os.path.join(
-            TOONTOWN_LIBRARY_PATH,
-            'Libraries.bundle',
+    if sys.platform == "darwin":
+        env["DYLD_LIBRARY_PATH"] = os.path.join(
+            TOONTOWN_LIBRARY_PATH, "Libraries.bundle",
         )
-        env['DYLD_FRAMEWORK_PATH'] = os.path.join(
-            TOONTOWN_LIBRARY_PATH,
-            'Frameworks',
-        )
-    elif sys.platform == 'linux' and 'XAUTHORITY' in os.environ:
+        env["DYLD_FRAMEWORK_PATH"] = os.path.join(TOONTOWN_LIBRARY_PATH, "Frameworks",)
+    elif sys.platform == "linux" and "XAUTHORITY" in os.environ:
         """
         Fix for TTREngine reporting:
         > :display:x11display(error): Could not open display ":0.0".
@@ -56,82 +50,67 @@ def start_engine(engine_path, gameserver, playcookie, **kwargs):
         >   File "<compiled 'direct.vlt8f63e471.ShowBase'>", line 0, in vltf05fd21b
         > Exception: Could not open window.
         """
-        env['XAUTHORITY'] = os.environ['XAUTHORITY']
+        env["XAUTHORITY"] = os.environ["XAUTHORITY"]
     return subprocess.Popen(
-        args=[engine_path],
-        cwd=os.path.dirname(engine_path),
-        env=env,
-        **kwargs,
+        args=[engine_path], cwd=os.path.dirname(engine_path), env=env, **kwargs,
     )
 
 
 def api_request(url, params=None, validate_ssl_cert=True):
     resp = urllib.request.urlopen(
         url=url,
-        data=urllib.parse.urlencode(params).encode('ascii')
-            if params else None,
-        context=None if validate_ssl_cert
-            else ssl._create_unverified_context(),
+        data=urllib.parse.urlencode(params).encode("ascii") if params else None,
+        context=None if validate_ssl_cert else ssl._create_unverified_context(),
     )
-    return json.loads(resp.read().decode('ascii'))
+    return json.loads(resp.read().decode("ascii"))
 
 
 class LoginSuccessful:
-
     def __init__(self, playcookie, gameserver):
         self.playcookie = playcookie
         self.gameserver = gameserver
 
 
 class LoginDelayed:
-
     def __init__(self, queue_token):
         self.queue_token = queue_token
 
 
-def login(username=None, password=None,
-          queue_token=None, validate_ssl_cert=True):
+def login(username=None, password=None, queue_token=None, validate_ssl_cert=True):
     if username is not None and queue_token is None:
         assert password is not None
         req_params = {
-            'username': username,
-            'password': password,
+            "username": username,
+            "password": password,
         }
     elif username is None and queue_token is not None:
         req_params = {
-            'queueToken': queue_token,
+            "queueToken": queue_token,
         }
     else:
-        raise Exception('either specify username or queue token')
+        raise Exception("either specify username or queue token")
     resp_data = api_request(
-        url=LOGIN_API_URL,
-        params=req_params,
-        validate_ssl_cert=validate_ssl_cert,
+        url=LOGIN_API_URL, params=req_params, validate_ssl_cert=validate_ssl_cert,
     )
-    if resp_data['success'] == 'true':
+    if resp_data["success"] == "true":
         return LoginSuccessful(
-            playcookie=resp_data['cookie'],
-            gameserver=resp_data['gameserver'],
+            playcookie=resp_data["cookie"], gameserver=resp_data["gameserver"],
         )
-    elif resp_data['success'] == 'delayed':
-        return LoginDelayed(
-            queue_token=resp_data['queueToken'],
-        )
+    elif resp_data["success"] == "delayed":
+        return LoginDelayed(queue_token=resp_data["queueToken"],)
     else:
         raise Exception(repr(resp_data))
 
 
-def launch(engine_path, username, password, validate_ssl_certs=True,
-           cpu_limit_percent=None):
+def launch(
+    engine_path, username, password, validate_ssl_certs=True, cpu_limit_percent=None
+):
     result = login(
-        username=username,
-        password=password,
-        validate_ssl_cert=validate_ssl_certs,
+        username=username, password=password, validate_ssl_cert=validate_ssl_certs,
     )
     if isinstance(result, LoginDelayed):
         result = login(
-            queue_token=result.queue_token,
-            validate_ssl_cert=validate_ssl_certs,
+            queue_token=result.queue_token, validate_ssl_cert=validate_ssl_certs,
         )
     if isinstance(result, LoginSuccessful):
         p = start_engine(
@@ -140,21 +119,23 @@ def launch(engine_path, username, password, validate_ssl_certs=True,
             playcookie=result.playcookie,
         )
         if cpu_limit_percent is not None:
-            subprocess.Popen(args=[
-                'cpulimit',
-                '--pid', str(p.pid),
-                '--limit', str(cpu_limit_percent),
-                # '--verbose',
-            ])
+            subprocess.Popen(
+                args=[
+                    "cpulimit",
+                    "--pid",
+                    str(p.pid),
+                    "--limit",
+                    str(cpu_limit_percent),
+                    # '--verbose',
+                ]
+            )
         p.wait()
     else:
         raise Exception(repr(result))
 
 
 class InvasionProgress:
-
-    def __init__(self, district, date, cog_type,
-                 despawned_number, total_number):
+    def __init__(self, district, date, cog_type, despawned_number, total_number):
         self.district = district
         self.date = date
         self.cog_type = cog_type
@@ -168,16 +149,16 @@ class InvasionProgress:
 
 def request_active_invasions(validate_ssl_certs=True):
     resp_data = api_request(INVASIONS_API_URL)
-    if resp_data['error'] is not None:
-        raise Exception(resp_data['error'])
+    if resp_data["error"] is not None:
+        raise Exception(resp_data["error"])
     else:
         invs = {}
-        for district, inv_data in resp_data['invasions'].items():
-            despawned_number, total_number = inv_data['progress'].split('/')
+        for district, inv_data in resp_data["invasions"].items():
+            despawned_number, total_number = inv_data["progress"].split("/")
             invs[district] = InvasionProgress(
                 district=district,
-                date=datetime.datetime.utcfromtimestamp(inv_data['asOf']),
-                cog_type=inv_data['type'],
+                date=datetime.datetime.utcfromtimestamp(inv_data["asOf"]),
+                cog_type=inv_data["type"],
                 despawned_number=int(despawned_number),
                 total_number=int(total_number),
             )
