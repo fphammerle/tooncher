@@ -1,13 +1,11 @@
-#!/usr/bin/env python3
-
-from setuptools import setup
-
 import glob
 
-setup(
+import setuptools
+
+setuptools.setup(
     name="tooncher",
+    use_scm_version=True,
     packages=["tooncher"],
-    version="0.4.0",
     description="automates toontown rewritten's login process",
     author="Fabian Peter Hammerle",
     author_email="fabian.hammerle@gmail.com",
@@ -17,5 +15,6 @@ setup(
     classifiers=[],
     scripts=glob.glob("scripts/*"),
     install_requires=["pyyaml"],
+    setup_requires=["setuptools_scm"],
     tests_require=["pytest"],
 )
