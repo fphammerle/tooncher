@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-
 import os
-import sys
 
+import argparse
 import yaml
 
 import tooncher
@@ -37,8 +35,6 @@ def run(username, config_path, engine_path=None, validate_ssl_certs=True,
 
 
 def _init_argparser():
-
-    import argparse
     argparser = argparse.ArgumentParser(description=None)
     argparser.add_argument('username')
     argparser.add_argument(
@@ -79,14 +75,7 @@ def _init_argparser():
     return argparser
 
 
-def main(argv):
-
+def main() -> None:
     argparser = _init_argparser()
-    args = argparser.parse_args(argv)
-
+    args = argparser.parse_args()
     run(**vars(args))
-
-    return 0
-
-if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))

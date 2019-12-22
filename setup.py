@@ -1,11 +1,9 @@
-import glob
-
 import setuptools
 
 setuptools.setup(
     name="tooncher",
     use_scm_version=True,
-    packages=["tooncher"],
+    packages=setuptools.find_packages(),
     description="automates toontown rewritten's login process",
     author="Fabian Peter Hammerle",
     author_email="fabian.hammerle@gmail.com",
@@ -13,7 +11,7 @@ setuptools.setup(
     download_url="https://github.com/fphammerle/tooncher/tarball/0.3.1",
     keywords=["game", "launcher", "toontown rewritten", "ttr"],
     classifiers=[],
-    scripts=glob.glob("scripts/*"),
+    entry_points={"console_scripts": ["tooncher = tooncher._cli:main"]},
     install_requires=["pyyaml"],
     setup_requires=["setuptools_scm"],
     tests_require=["pytest"],
