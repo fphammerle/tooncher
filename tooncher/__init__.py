@@ -13,7 +13,6 @@ https://github.com/ToontownRewritten/api-doc/blob/master/login.md
 https://github.com/ToontownRewritten/api-doc/blob/master/invasions.md
 """
 
-INVASIONS_API_URL = "https://www.toontownrewritten.com/api/invasions?format=json"
 LOGIN_API_URL = "https://www.toontownrewritten.com/api/login?format=json"
 
 if sys.platform == "darwin":
@@ -132,34 +131,3 @@ def launch(
         p.wait()
     else:
         raise Exception(repr(result))
-
-
-class InvasionProgress:
-    def __init__(self, district, date, cog_type, despawned_number, total_number):
-        self.district = district
-        self.date = date
-        self.cog_type = cog_type
-        self.despawned_number = despawned_number
-        self.total_number = total_number
-
-    @property
-    def remaining_number(self):
-        return self.total_number - self.despawned_number
-
-
-def request_active_invasions(validate_ssl_certs=True):
-    resp_data = api_request(INVASIONS_API_URL)
-    if resp_data["error"] is not None:
-        raise Exception(resp_data["error"])
-    else:
-        invs = {}
-        for district, inv_data in resp_data["invasions"].items():
-            despawned_number, total_number = inv_data["progress"].split("/")
-            invs[district] = InvasionProgress(
-                district=district,
-                date=datetime.datetime.utcfromtimestamp(inv_data["asOf"]),
-                cog_type=inv_data["type"],
-                despawned_number=int(despawned_number),
-                total_number=int(total_number),
-            )
-        return invs

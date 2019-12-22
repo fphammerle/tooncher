@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - `argcomplete`
+- `tooncher.INVASIONS_API_URL`
+- `tooncher.InvasionProgress`
+- `tooncher.request_active_invasions`
 
 ## [0.4.1] - 2019-12-22
 ### Fixed
