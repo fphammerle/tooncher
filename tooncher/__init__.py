@@ -65,20 +65,20 @@ def api_request(url, params=None, validate_ssl_cert=True):
     return json.loads(resp.read().decode("ascii"))
 
 
-class LoginSuccessful:
+class _LoginSuccessful:
     def __init__(self, playcookie, gameserver):
         self.playcookie = playcookie
         self.gameserver = gameserver
 
 
-class LoginDelayed:
+class _LoginDelayed:
     def __init__(self, queue_token):
         self.queue_token = queue_token
 
 
 def login(
     username=None, password=None, queue_token=None, validate_ssl_cert=True
-) -> typing.Union[LoginSuccessful, LoginDelayed]:
+) -> typing.Union[_LoginSuccessful, _LoginDelayed]:
     if username is not None and queue_token is None:
         assert password is not None
         req_params = {
@@ -95,11 +95,11 @@ def login(
         url=LOGIN_API_URL, params=req_params, validate_ssl_cert=validate_ssl_cert,
     )
     if resp_data["success"] == "true":
-        return LoginSuccessful(
+        return _LoginSuccessful(
             playcookie=resp_data["cookie"], gameserver=resp_data["gameserver"],
         )
     if resp_data["success"] == "delayed":
-        return LoginDelayed(queue_token=resp_data["queueToken"],)
+        return _LoginDelayed(queue_token=resp_data["queueToken"],)
     raise Exception(repr(resp_data))
 
 
@@ -109,11 +109,11 @@ def launch(
     result = login(
         username=username, password=password, validate_ssl_cert=validate_ssl_certs,
     )
-    if isinstance(result, LoginDelayed):
+    if isinstance(result, _LoginDelayed):
         result = login(
             queue_token=result.queue_token, validate_ssl_cert=validate_ssl_certs,
         )
-    if not isinstance(result, LoginSuccessful):
+    if not isinstance(result, _LoginSuccessful):
         raise Exception("unexpected response: {!r}".format(result))
     process = start_engine(
         engine_path=engine_path,
