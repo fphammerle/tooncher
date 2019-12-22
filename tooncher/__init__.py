@@ -26,7 +26,9 @@ else:
     TOONTOWN_ENGINE_DEFAULT_PATH = None
 
 
-def start_engine(engine_path, gameserver, playcookie, **kwargs) -> subprocess.Popen:
+def start_engine(
+    engine_path: str, gameserver: str, playcookie: str, **popen_kwargs
+) -> subprocess.Popen:
     env = {
         "TTR_GAMESERVER": gameserver,
         "TTR_PLAYCOOKIE": playcookie,
@@ -48,11 +50,13 @@ def start_engine(engine_path, gameserver, playcookie, **kwargs) -> subprocess.Po
         # > Exception: Could not open window.
         env["XAUTHORITY"] = os.environ["XAUTHORITY"]
     return subprocess.Popen(
-        args=[engine_path], cwd=os.path.dirname(engine_path), env=env, **kwargs,
+        args=[engine_path], cwd=os.path.dirname(engine_path), env=env, **popen_kwargs,
     )
 
 
-def api_request(url, params=None, validate_ssl_cert=True):
+def api_request(
+    url: str, params: typing.Optional[dict] = None, validate_ssl_cert: bool = True
+):
     resp = urllib.request.urlopen(
         url=url,
         data=urllib.parse.urlencode(params).encode("ascii") if params else None,
@@ -62,18 +66,21 @@ def api_request(url, params=None, validate_ssl_cert=True):
 
 
 class _LoginSuccessful:
-    def __init__(self, playcookie, gameserver):
+    def __init__(self, playcookie: str, gameserver: str):
         self.playcookie = playcookie
         self.gameserver = gameserver
 
 
 class _LoginDelayed:
-    def __init__(self, queue_token):
+    def __init__(self, queue_token: str):
         self.queue_token = queue_token
 
 
 def login(
-    username=None, password=None, queue_token=None, validate_ssl_cert=True
+    username: typing.Optional[str] = None,
+    password: typing.Optional[str] = None,
+    queue_token: typing.Optional[str] = None,
+    validate_ssl_cert: bool = True,
 ) -> typing.Union[_LoginSuccessful, _LoginDelayed]:
     if username is not None and queue_token is None:
         assert password is not None
@@ -100,7 +107,11 @@ def login(
 
 
 def launch(
-    engine_path, username, password, validate_ssl_certs=True, cpu_limit_percent=None
+    engine_path: str,
+    username: str,
+    password: str,
+    validate_ssl_certs: bool = True,
+    cpu_limit_percent: typing.Optional[int] = None,
 ) -> None:
     result = login(
         username=username, password=password, validate_ssl_cert=validate_ssl_certs,
