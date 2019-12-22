@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - install command line interface via `setuptools.setup(entry_points=…)`
 - now private:
-  - `tooncher._LoginDelayed`
-  - `tooncher._LoginSuccessful`
+  - `tooncher.LOGIN_API_URL`
+  - `tooncher.LoginDelayed`
+  - `tooncher.LoginSuccessful`
+  - `tooncher.api_request`
 
 ### Removed
 - `argcomplete`

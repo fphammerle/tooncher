@@ -12,7 +12,7 @@ import urllib.request
 # https://github.com/ToontownRewritten/api-doc/blob/master/login.md
 # https://github.com/ToontownRewritten/api-doc/blob/master/invasions.md
 
-LOGIN_API_URL = "https://www.toontownrewritten.com/api/login?format=json"
+_LOGIN_API_URL = "https://www.toontownrewritten.com/api/login?format=json"
 
 if sys.platform == "darwin":
     TOONTOWN_LIBRARY_PATH = os.path.join(
@@ -54,7 +54,7 @@ def start_engine(
     )
 
 
-def api_request(
+def _api_request(
     url: str, params: typing.Optional[dict] = None, validate_ssl_cert: bool = True
 ):
     resp = urllib.request.urlopen(
@@ -94,8 +94,8 @@ def login(
         }
     else:
         raise Exception("either specify username or queue token")
-    resp_data = api_request(
-        url=LOGIN_API_URL, params=req_params, validate_ssl_cert=validate_ssl_cert,
+    resp_data = _api_request(
+        url=_LOGIN_API_URL, params=req_params, validate_ssl_cert=validate_ssl_cert,
     )
     if resp_data["success"] == "true":
         return _LoginSuccessful(
