@@ -3,8 +3,10 @@
 
 import os
 import sys
-import tooncher
+
 import yaml
+
+import tooncher
 
 
 def run(username, config_path, engine_path=None, validate_ssl_certs=True,
@@ -12,7 +14,7 @@ def run(username, config_path, engine_path=None, validate_ssl_certs=True,
 
     if os.path.exists(config_path):
         with open(config_path) as f:
-            config = yaml.load(f.read())
+            config = yaml.safe_load(f.read())
     else:
         config = {}
 
