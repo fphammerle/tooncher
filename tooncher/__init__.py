@@ -8,11 +8,9 @@ import typing
 import urllib.parse
 import urllib.request
 
-"""
-official api documentation:
-https://github.com/ToontownRewritten/api-doc/blob/master/login.md
-https://github.com/ToontownRewritten/api-doc/blob/master/invasions.md
-"""
+# official api documentation:
+# https://github.com/ToontownRewritten/api-doc/blob/master/login.md
+# https://github.com/ToontownRewritten/api-doc/blob/master/invasions.md
 
 LOGIN_API_URL = "https://www.toontownrewritten.com/api/login?format=json"
 
@@ -39,17 +37,15 @@ def start_engine(engine_path, gameserver, playcookie, **kwargs) -> subprocess.Po
         )
         env["DYLD_FRAMEWORK_PATH"] = os.path.join(TOONTOWN_LIBRARY_PATH, "Frameworks",)
     elif sys.platform == "linux" and "XAUTHORITY" in os.environ:
-        """
-        Fix for TTREngine reporting:
-        > :display:x11display(error): Could not open display ":0.0".
-        > :ToonBase: Default graphics pipe is glxGraphicsPipe (OpenGL).
-        > :ToonBase(warning): Unable to open 'onscreen' window.
-        > Traceback (most recent call last):
-        >   File "<compiled '__voltorbmain__'>", line 0, in <module>
-        >   [...]
-        >   File "<compiled 'direct.vlt8f63e471.ShowBase'>", line 0, in vltf05fd21b
-        > Exception: Could not open window.
-        """
+        # Fix for TTREngine reporting:
+        # > :display:x11display(error): Could not open display ":0.0".
+        # > :ToonBase: Default graphics pipe is glxGraphicsPipe (OpenGL).
+        # > :ToonBase(warning): Unable to open 'onscreen' window.
+        # > Traceback (most recent call last):
+        # >   File "<compiled '__voltorbmain__'>", line 0, in <module>
+        # >   [...]
+        # >   File "<compiled 'direct.vlt8f63e471.ShowBase'>", line 0, in vltf05fd21b
+        # > Exception: Could not open window.
         env["XAUTHORITY"] = os.environ["XAUTHORITY"]
     return subprocess.Popen(
         args=[engine_path], cwd=os.path.dirname(engine_path), env=env, **kwargs,
