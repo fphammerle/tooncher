@@ -1,6 +1,7 @@
-import os
-
 import argparse
+import os
+import pathlib
+
 import yaml
 
 import tooncher
@@ -27,7 +28,7 @@ def run(
     for account in accounts:
         if account["username"] == username:
             tooncher.launch(
-                engine_path=engine_path,
+                engine_path=pathlib.Path(engine_path),
                 username=account["username"],
                 password=account["password"],
                 validate_ssl_certs=validate_ssl_certs,

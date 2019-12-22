@@ -12,12 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `tooncher.LoginDelayed`
   - `tooncher.LoginSuccessful`
   - `tooncher.api_request`
+- `start_engine` & `launch`: expected `isinstance(engine_path, pathlib.Path)`
+  (instead of `str`)
 
 ### Removed
 - `argcomplete`
 - `tooncher.INVASIONS_API_URL`
 - `tooncher.InvasionProgress`
+- `tooncher.TOONTOWN_LIBRARY_PATH`
 - `tooncher.request_active_invasions`
+
+### Fixed
+- mac: set DYLD_LIBRARY_PATH & DYLD_FRAMEWORK_PATH relatively to engine path
 
 ## [0.4.1] - 2019-12-22
 ### Fixed

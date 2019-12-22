@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import pathlib
 import ssl
 import subprocess
 import sys
@@ -15,29 +16,28 @@ import urllib.request
 _LOGIN_API_URL = "https://www.toontownrewritten.com/api/login?format=json"
 
 if sys.platform == "darwin":
-    TOONTOWN_LIBRARY_PATH = os.path.join(
-        os.path.expanduser("~"), "Library", "Application Support", "Toontown Rewritten",
-    )
     TOONTOWN_ENGINE_DEFAULT_PATH = os.path.join(
-        TOONTOWN_LIBRARY_PATH, "Toontown Rewritten",
+        os.path.expanduser("~"),
+        "Library",
+        "Application Support",
+        "Toontown Rewritten",
+        "Toontown Rewritten",
     )
 else:
-    TOONTOWN_LIBRARY_PATH = None
     TOONTOWN_ENGINE_DEFAULT_PATH = None
 
 
 def start_engine(
-    engine_path: str, gameserver: str, playcookie: str, **popen_kwargs
+    engine_path: pathlib.Path, gameserver: str, playcookie: str, **popen_kwargs
 ) -> subprocess.Popen:
     env = {
         "TTR_GAMESERVER": gameserver,
         "TTR_PLAYCOOKIE": playcookie,
     }
+    engine_path = engine_path.resolve()
     if sys.platform == "darwin":
-        env["DYLD_LIBRARY_PATH"] = os.path.join(
-            TOONTOWN_LIBRARY_PATH, "Libraries.bundle",
-        )
-        env["DYLD_FRAMEWORK_PATH"] = os.path.join(TOONTOWN_LIBRARY_PATH, "Frameworks",)
+        env["DYLD_LIBRARY_PATH"] = engine_path.parent.joinpath("Libraries.bundle")
+        env["DYLD_FRAMEWORK_PATH"] = engine_path.parent.joinpath("Frameworks")
     elif sys.platform == "linux" and "XAUTHORITY" in os.environ:
         # Fix for TTREngine reporting:
         # > :display:x11display(error): Could not open display ":0.0".
@@ -50,7 +50,7 @@ def start_engine(
         # > Exception: Could not open window.
         env["XAUTHORITY"] = os.environ["XAUTHORITY"]
     return subprocess.Popen(
-        args=[engine_path], cwd=os.path.dirname(engine_path), env=env, **popen_kwargs,
+        args=[str(engine_path)], cwd=engine_path.parent(), env=env, **popen_kwargs,
     )
 
 
@@ -107,7 +107,7 @@ def login(
 
 
 def launch(
-    engine_path: str,
+    engine_path: pathlib.Path,
     username: str,
     password: str,
     validate_ssl_certs: bool = True,
