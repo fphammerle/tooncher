@@ -10,8 +10,8 @@ def run(username, config_path, engine_path=None, validate_ssl_certs=True,
         cpu_limit_percent=None):
 
     if os.path.exists(config_path):
-        with open(config_path) as f:
-            config = yaml.safe_load(f.read())
+        with open(config_path) as config_file:
+            config = yaml.safe_load(config_file.read())
     else:
         config = {}
 

@@ -4,6 +4,7 @@ import os
 import ssl
 import subprocess
 import sys
+import typing
 import urllib.parse
 import urllib.request
 
@@ -27,7 +28,7 @@ else:
     TOONTOWN_ENGINE_DEFAULT_PATH = None
 
 
-def start_engine(engine_path, gameserver, playcookie, **kwargs):
+def start_engine(engine_path, gameserver, playcookie, **kwargs) -> subprocess.Popen:
     env = {
         "TTR_GAMESERVER": gameserver,
         "TTR_PLAYCOOKIE": playcookie,
@@ -75,7 +76,9 @@ class LoginDelayed:
         self.queue_token = queue_token
 
 
-def login(username=None, password=None, queue_token=None, validate_ssl_cert=True):
+def login(
+    username=None, password=None, queue_token=None, validate_ssl_cert=True
+) -> typing.Union[LoginSuccessful, LoginDelayed]:
     if username is not None and queue_token is None:
         assert password is not None
         req_params = {
@@ -95,15 +98,14 @@ def login(username=None, password=None, queue_token=None, validate_ssl_cert=True
         return LoginSuccessful(
             playcookie=resp_data["cookie"], gameserver=resp_data["gameserver"],
         )
-    elif resp_data["success"] == "delayed":
+    if resp_data["success"] == "delayed":
         return LoginDelayed(queue_token=resp_data["queueToken"],)
-    else:
-        raise Exception(repr(resp_data))
+    raise Exception(repr(resp_data))
 
 
 def launch(
     engine_path, username, password, validate_ssl_certs=True, cpu_limit_percent=None
-):
+) -> None:
     result = login(
         username=username, password=password, validate_ssl_cert=validate_ssl_certs,
     )
@@ -111,23 +113,22 @@ def launch(
         result = login(
             queue_token=result.queue_token, validate_ssl_cert=validate_ssl_certs,
         )
-    if isinstance(result, LoginSuccessful):
-        p = start_engine(
-            engine_path=engine_path,
-            gameserver=result.gameserver,
-            playcookie=result.playcookie,
+    if not isinstance(result, LoginSuccessful):
+        raise Exception("unexpected response: {!r}".format(result))
+    process = start_engine(
+        engine_path=engine_path,
+        gameserver=result.gameserver,
+        playcookie=result.playcookie,
+    )
+    if cpu_limit_percent is not None:
+        subprocess.Popen(
+            args=[
+                "cpulimit",
+                "--pid",
+                str(process.pid),
+                "--limit",
+                str(cpu_limit_percent),
+                # '--verbose',
+            ]
         )
-        if cpu_limit_percent is not None:
-            subprocess.Popen(
-                args=[
-                    "cpulimit",
-                    "--pid",
-                    str(p.pid),
-                    "--limit",
-                    str(cpu_limit_percent),
-                    # '--verbose',
-                ]
-            )
-        p.wait()
-    else:
-        raise Exception(repr(result))
+    process.wait()
