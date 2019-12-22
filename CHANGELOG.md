@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `tooncher.LOGIN_API_URL`
   - `tooncher.LoginDelayed`
   - `tooncher.LoginSuccessful`
+  - `tooncher.TOONTOWN_ENGINE_DEFAULT_PATH`
   - `tooncher.api_request`
 - `start_engine` & `launch`: expected `isinstance(engine_path, pathlib.Path)`
   (instead of `str`)

@@ -15,17 +15,6 @@ import urllib.request
 
 _LOGIN_API_URL = "https://www.toontownrewritten.com/api/login?format=json"
 
-if sys.platform == "darwin":
-    TOONTOWN_ENGINE_DEFAULT_PATH = os.path.join(
-        os.path.expanduser("~"),
-        "Library",
-        "Application Support",
-        "Toontown Rewritten",
-        "Toontown Rewritten",
-    )
-else:
-    TOONTOWN_ENGINE_DEFAULT_PATH = None
-
 
 def start_engine(
     engine_path: pathlib.Path, gameserver: str, playcookie: str, **popen_kwargs

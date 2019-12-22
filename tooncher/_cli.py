@@ -1,10 +1,22 @@
 import argparse
 import os
 import pathlib
+import sys
 
 import yaml
 
 import tooncher
+
+if sys.platform == "darwin":
+    _TOONTOWN_ENGINE_DEFAULT_PATH = os.path.join(
+        os.path.expanduser("~"),
+        "Library",
+        "Application Support",
+        "Toontown Rewritten",
+        "Toontown Rewritten",
+    )
+else:
+    _TOONTOWN_ENGINE_DEFAULT_PATH = None
 
 
 def run(
@@ -52,7 +64,7 @@ def _init_argparser():
         "-e",
         metavar="path",
         dest="engine_path",
-        default=tooncher.TOONTOWN_ENGINE_DEFAULT_PATH,
+        default=_TOONTOWN_ENGINE_DEFAULT_PATH,
         help="\n".join(
             [
                 "path to toontown engine.",
