@@ -2,6 +2,8 @@
 automates toontown rewritten's login process
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Last Release](https://img.shields.io/pypi/v/tooncher.svg)](https://pypi.org/project/tooncher/#history)
+[![Python Version](https://img.shields.io/pypi/pyversions/tooncher.svg)](https://pypi.org/project/tooncher/)
 
 ## Installation
 
