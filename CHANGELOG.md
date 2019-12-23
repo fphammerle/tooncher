@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `tooncher.TOONTOWN_ENGINE_DEFAULT_PATH`
     - `tooncher.api_request`
     - `tooncher.login`
-  - `start_engine` & `launch`: expected `isinstance(engine_path, pathlib.Path)`
+  - `start_engine` & `launch`: expects `isinstance(engine_path, pathlib.Path)`
     (instead of `str`)
 - pass all env vars to engine
   (e.g., enables use of `optirun tooncher …`)
