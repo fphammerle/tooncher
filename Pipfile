@@ -9,6 +9,8 @@ tooncher = {editable = true, path = "."}
 [dev-packages]
 black = "==19.10b0"
 pytest = "*"
+# pipenv run pytest --cov=tooncher --cov-report=term-missing
+pytest-cov = "*"
 
 [requires]
 python_version = "3"
