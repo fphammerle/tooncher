@@ -25,8 +25,8 @@ def start_engine(
     }
     engine_path = engine_path.resolve()
     if sys.platform == "darwin":
-        env["DYLD_LIBRARY_PATH"] = engine_path.parent.joinpath("Libraries.bundle")
-        env["DYLD_FRAMEWORK_PATH"] = engine_path.parent.joinpath("Frameworks")
+        env["DYLD_LIBRARY_PATH"] = str(engine_path.parent.joinpath("Libraries.bundle"))
+        env["DYLD_FRAMEWORK_PATH"] = str(engine_path.parent.joinpath("Frameworks"))
     elif sys.platform == "linux" and "XAUTHORITY" in os.environ:
         # Fix for TTREngine reporting:
         # > :display:x11display(error): Could not open display ":0.0".
