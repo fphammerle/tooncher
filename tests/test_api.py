@@ -3,8 +3,6 @@ import shutil
 import subprocess
 import unittest.mock
 
-import pytest
-
 import tooncher
 
 
@@ -25,7 +23,7 @@ def test_start_engine():
 
 
 def test_start_engine_mac():
-    app_support_path = "/Users/fabianpeter/Library/Application Support"
+    app_support_path = "/Users/me/Library/Application Support"
     with unittest.mock.patch("subprocess.Popen") as popen_mock:
         with unittest.mock.patch("sys.platform", "darwin"):
             tooncher.start_engine(
@@ -38,11 +36,11 @@ def test_start_engine_mac():
             )
     popen_mock.assert_called_once_with(
         args=[
-            "/Users/fabianpeter/Library/Application Support/Toontown Rewritten/Toontown Rewritten"
+            "/Users/me/Library/Application Support/Toontown Rewritten/Toontown Rewritten"
         ],
         check=True,
         cwd=pathlib.PosixPath(
-            "/Users/fabianpeter/Library/Application Support/Toontown Rewritten"
+            "/Users/me/Library/Application Support/Toontown Rewritten"
         ),
         env={
             "TTR_GAMESERVER": "gameserver",
@@ -50,5 +48,27 @@ def test_start_engine_mac():
             "DYLD_LIBRARY_PATH": app_support_path
             + "/Toontown Rewritten/Libraries.bundle",
             "DYLD_FRAMEWORK_PATH": app_support_path + "/Toontown Rewritten/Frameworks",
+        },
+    )
+
+
+def test_start_engine_xorg():
+    with unittest.mock.patch("subprocess.Popen") as popen_mock:
+        with unittest.mock.patch("os.environ", {"XAUTHORITY": "/home/me/.Xauthority"}):
+            with unittest.mock.patch("sys.platform", "linux"):
+                tooncher.start_engine(
+                    engine_path=pathlib.PosixPath("/opt/toontown-rewritter/TTREngine"),
+                    gameserver="gameserver.tld",
+                    playcookie="cookie123",
+                    check=False,
+                )
+    popen_mock.assert_called_once_with(
+        args=["/opt/toontown-rewritter/TTREngine"],
+        check=False,
+        cwd=pathlib.PosixPath("/opt/toontown-rewritter"),
+        env={
+            "TTR_GAMESERVER": "gameserver.tld",
+            "TTR_PLAYCOOKIE": "cookie123",
+            "XAUTHORITY": "/home/me/.Xauthority",
         },
     )
