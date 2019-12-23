@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `tooncher.login`
   - `start_engine` & `launch`: expected `isinstance(engine_path, pathlib.Path)`
     (instead of `str`)
+- pass all env vars to engine
+  (e.g., enables use of `optirun tooncher …`)
 
 ### Removed
 - python interface:

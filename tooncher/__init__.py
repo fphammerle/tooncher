@@ -1,3 +1,4 @@
+import copy
 import datetime
 import json
 import os
@@ -19,25 +20,23 @@ _LOGIN_API_URL = "https://www.toontownrewritten.com/api/login?format=json"
 def start_engine(
     engine_path: pathlib.Path, gameserver: str, playcookie: str, **popen_kwargs
 ) -> subprocess.Popen:
-    env = {
-        "TTR_GAMESERVER": gameserver,
-        "TTR_PLAYCOOKIE": playcookie,
-    }
+    # without XAUTHORITY:
+    # > :display:x11display(error): Could not open display ":0.0".
+    # > :ToonBase: Default graphics pipe is glxGraphicsPipe (OpenGL).
+    # > :ToonBase(warning): Unable to open 'onscreen' window.
+    # > Traceback (most recent call last):
+    # >   File "<compiled '__voltorbmain__'>", line 0, in <module>
+    # >   [...]
+    # >   File "<compiled 'direct.vlt8f63e471.ShowBase'>", line 0, in vltf05fd21b
+    # > Exception: Could not open window.
+    # optirun sets plenty of env vars
+    env = copy.copy(os.environ)
+    env["TTR_GAMESERVER"] = gameserver
+    env["TTR_PLAYCOOKIE"] = playcookie
     engine_path = engine_path.resolve()
     if sys.platform == "darwin":
         env["DYLD_LIBRARY_PATH"] = str(engine_path.parent.joinpath("Libraries.bundle"))
         env["DYLD_FRAMEWORK_PATH"] = str(engine_path.parent.joinpath("Frameworks"))
-    elif sys.platform == "linux" and "XAUTHORITY" in os.environ:
-        # Fix for TTREngine reporting:
-        # > :display:x11display(error): Could not open display ":0.0".
-        # > :ToonBase: Default graphics pipe is glxGraphicsPipe (OpenGL).
-        # > :ToonBase(warning): Unable to open 'onscreen' window.
-        # > Traceback (most recent call last):
-        # >   File "<compiled '__voltorbmain__'>", line 0, in <module>
-        # >   [...]
-        # >   File "<compiled 'direct.vlt8f63e471.ShowBase'>", line 0, in vltf05fd21b
-        # > Exception: Could not open window.
-        env["XAUTHORITY"] = os.environ["XAUTHORITY"]
     return subprocess.Popen(
         args=[str(engine_path)], cwd=engine_path.parent, env=env, **popen_kwargs,
     )
