@@ -65,7 +65,7 @@ class _LoginDelayed:
         self.queue_token = queue_token
 
 
-def login(
+def _login(
     username: typing.Optional[str] = None,
     password: typing.Optional[str] = None,
     queue_token: typing.Optional[str] = None,
@@ -102,11 +102,11 @@ def launch(
     validate_ssl_certs: bool = True,
     cpu_limit_percent: typing.Optional[int] = None,
 ) -> None:
-    result = login(
+    result = _login(
         username=username, password=password, validate_ssl_cert=validate_ssl_certs,
     )
     if isinstance(result, _LoginDelayed):
-        result = login(
+        result = _login(
             queue_token=result.queue_token, validate_ssl_cert=validate_ssl_certs,
         )
     if not isinstance(result, _LoginSuccessful):
