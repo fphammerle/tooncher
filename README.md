@@ -44,3 +44,16 @@ $ tooncher toon
 $ tooncher ceo
 $ tooncher --cpu-limit 70 cfo
 ```
+
+### Python Interface
+
+```python
+import pathlib
+import tooncher
+
+tooncher.launch(
+    engine_path=pathlib.Path('/somewhere/toontown-rewritten/TTREngine'),
+    username='toon',
+    password='secret',
+)
+```
