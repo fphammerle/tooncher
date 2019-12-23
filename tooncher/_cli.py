@@ -35,7 +35,12 @@ def run(
         if "engine_path" in config:
             engine_path = config["engine_path"]
         else:
-            raise Exception("missing path to toontown engine")
+            engine_path = _TOONTOWN_ENGINE_DEFAULT_PATH
+    if engine_path is None:
+        raise ValueError(
+            "missing path to toontown engine\n"
+            + "pass --engine-path, set $TOONCHER_ENGINE_PATH, or add to config file"
+        )
     accounts = config["accounts"] if "accounts" in config else []
     for account in accounts:
         if account["username"] == username:
@@ -48,8 +53,18 @@ def run(
             )
 
 
+class _EnvDefaultArgparser(argparse.ArgumentParser):
+    def add_argument(self, *args, envvar=None, **kwargs):
+        if envvar:
+            envvar_value = os.environ.get(envvar, None)
+            if envvar_value:
+                kwargs["required"] = False
+                kwargs["default"] = envvar_value
+        super().add_argument(*args, **kwargs)
+
+
 def _init_argparser():
-    argparser = argparse.ArgumentParser(description=None)
+    argparser = _EnvDefaultArgparser(description=None)
     argparser.add_argument("username")
     argparser.add_argument(
         "--config",
@@ -64,14 +79,10 @@ def _init_argparser():
         "-e",
         metavar="path",
         dest="engine_path",
-        default=_TOONTOWN_ENGINE_DEFAULT_PATH,
-        help="\n".join(
-            [
-                "path to toontown engine.",
-                "this overrides the one specified in config file",
-                "(default: %(default)s)",
-            ]
-        ),
+        envvar="TOONCHER_ENGINE_PATH",
+        default=None,
+        help="path to toontown engine (overrides path in config file, "
+        + "may also be set via env var $TOONCHER_ENGINE_PATH)",
     )
     argparser.add_argument(
         "--no-ssl-cert-validation",

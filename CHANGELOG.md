@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- path to tootown engine may be provided via env var `$TOONCHER_ENGINE_PATH`
+
 ### Changed
 - install command line interface via `setuptools.setup(entry_points=…)`
 - now private:
@@ -25,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `tooncher.request_active_invasions`
 
 ### Fixed
-- mac: set DYLD_LIBRARY_PATH & DYLD_FRAMEWORK_PATH relatively to engine path
+- mac: `$DYLD_LIBRARY_PATH` & `$DYLD_FRAMEWORK_PATH` relative to engine path
 
 ## [0.4.1] - 2019-12-22
 ### Fixed
