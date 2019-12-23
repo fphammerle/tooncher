@@ -8,7 +8,6 @@ setuptools.setup(
     author="Fabian Peter Hammerle",
     author_email="fabian.hammerle@gmail.com",
     url="https://github.com/fphammerle/tooncher",
-    download_url="https://github.com/fphammerle/tooncher/tarball/0.3.1",
     keywords=["game", "launcher", "toontown rewritten", "ttr"],
     classifiers=[
         "Development Status :: 4 - Beta",
