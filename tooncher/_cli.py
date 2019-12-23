@@ -41,16 +41,20 @@ def run(
             "missing path to toontown engine\n"
             + "pass --engine-path, set $TOONCHER_ENGINE_PATH, or add to config file"
         )
-    accounts = config["accounts"] if "accounts" in config else []
-    for account in accounts:
-        if account["username"] == username:
-            tooncher.launch(
-                engine_path=pathlib.Path(engine_path),
-                username=account["username"],
-                password=account["password"],
-                validate_ssl_certs=validate_ssl_certs,
-                cpu_limit_percent=cpu_limit_percent,
-            )
+    accounts = [a for a in config.get("accounts", []) if a["username"] == username]
+    if not accounts:
+        raise ValueError("username {!r} was not found in config file".format(username))
+    if len(accounts) > 1:
+        raise ValueError(
+            "multiple entries for username {!r} in config file".format(username)
+        )
+    tooncher.launch(
+        engine_path=pathlib.Path(engine_path),
+        username=accounts[0]["username"],
+        password=accounts[0]["password"],
+        validate_ssl_certs=validate_ssl_certs,
+        cpu_limit_percent=cpu_limit_percent,
+    )
 
 
 class _EnvDefaultArgparser(argparse.ArgumentParser):

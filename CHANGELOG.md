@@ -9,23 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - path to tootown engine may be provided via env var `$TOONCHER_ENGINE_PATH`
 
 ### Changed
-- install command line interface via `setuptools.setup(entry_points=…)`
-- now private:
-  - `tooncher.LOGIN_API_URL`
-  - `tooncher.LoginDelayed`
-  - `tooncher.LoginSuccessful`
-  - `tooncher.TOONTOWN_ENGINE_DEFAULT_PATH`
-  - `tooncher.api_request`
-  - `tooncher.login`
-- `start_engine` & `launch`: expected `isinstance(engine_path, pathlib.Path)`
-  (instead of `str`)
+- command line interface:
+  - fail if selected username was not found in config
+  - fail if selected username has multiple entries in config
+  - install via `setuptools.setup(entry_points=…)`
+- python interface:
+  - now private:
+    - `tooncher.LOGIN_API_URL`
+    - `tooncher.LoginDelayed`
+    - `tooncher.LoginSuccessful`
+    - `tooncher.TOONTOWN_ENGINE_DEFAULT_PATH`
+    - `tooncher.api_request`
+    - `tooncher.login`
+  - `start_engine` & `launch`: expected `isinstance(engine_path, pathlib.Path)`
+    (instead of `str`)
 
 ### Removed
-- `argcomplete`
-- `tooncher.INVASIONS_API_URL`
-- `tooncher.InvasionProgress`
-- `tooncher.TOONTOWN_LIBRARY_PATH`
-- `tooncher.request_active_invasions`
+- python interface:
+  - `argcomplete`
+  - `tooncher.INVASIONS_API_URL`
+  - `tooncher.InvasionProgress`
+  - `tooncher.TOONTOWN_LIBRARY_PATH`
+  - `tooncher.request_active_invasions`
 
 ### Fixed
 - mac: `$DYLD_LIBRARY_PATH` & `$DYLD_FRAMEWORK_PATH` relative to engine path
