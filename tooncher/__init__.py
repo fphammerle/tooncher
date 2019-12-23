@@ -39,7 +39,7 @@ def start_engine(
         # > Exception: Could not open window.
         env["XAUTHORITY"] = os.environ["XAUTHORITY"]
     return subprocess.Popen(
-        args=[str(engine_path)], cwd=engine_path.parent(), env=env, **popen_kwargs,
+        args=[str(engine_path)], cwd=engine_path.parent, env=env, **popen_kwargs,
     )
 
 
