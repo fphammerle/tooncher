@@ -1,4 +1,3 @@
-import copy
 import datetime
 import json
 import os
@@ -30,7 +29,7 @@ def start_engine(
     # >   File "<compiled 'direct.vlt8f63e471.ShowBase'>", line 0, in vltf05fd21b
     # > Exception: Could not open window.
     # optirun sets plenty of env vars
-    env = copy.copy(os.environ)
+    env = os.environ.copy()
     env["TTR_GAMESERVER"] = gameserver
     env["TTR_PLAYCOOKIE"] = playcookie
     engine_path = engine_path.resolve()
