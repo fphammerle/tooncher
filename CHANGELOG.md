@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - package: use readme as long description for pypi.org
 
+### Fixed
+- `test_start_engine_mac` if `os.environ != {}`
+
 ## [1.0.0] - 2019-12-23
 ### Added
 - path to tootown engine may be provided via env var `$TOONCHER_ENGINE_PATH`

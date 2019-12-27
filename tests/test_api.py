@@ -22,6 +22,7 @@ def test_start_engine():
     assert b"TTR_PLAYCOOKIE=cookie" in env
 
 
+@unittest.mock.patch("os.environ", {"SOME": "VAR", "OTHER": "VALUE"})
 def test_start_engine_mac():
     app_support_path = "/Users/me/Library/Application Support"
     with unittest.mock.patch("subprocess.Popen") as popen_mock:
@@ -43,6 +44,8 @@ def test_start_engine_mac():
             "/Users/me/Library/Application Support/Toontown Rewritten"
         ),
         env={
+            "SOME": "VAR",
+            "OTHER": "VALUE",
             "TTR_GAMESERVER": "gameserver",
             "TTR_PLAYCOOKIE": "cookie",
             "DYLD_LIBRARY_PATH": app_support_path
