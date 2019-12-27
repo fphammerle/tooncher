@@ -8,6 +8,8 @@ tooncher = {editable = true, path = "."}
 
 [dev-packages]
 black = "==19.10b0"
+pylint = "*"
+pylint-import-requirements = "*"
 pytest = "*"
 # pipenv run pytest --cov=tooncher --cov-report=term-missing
 pytest-cov = "*"
