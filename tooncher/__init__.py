@@ -44,12 +44,16 @@ def start_engine(
 def _api_request(
     url: str, params: typing.Optional[dict] = None, validate_ssl_cert: bool = True
 ):
-    resp = urllib.request.urlopen(
+    request = urllib.request.Request(
         url=url,
         data=urllib.parse.urlencode(params).encode("ascii") if params else None,
+        headers={"User-Agent": "tooncher"},
+    )
+    response = urllib.request.urlopen(
+        request,
         context=None if validate_ssl_cert else ssl._create_unverified_context(),
     )
-    return json.loads(resp.read().decode("ascii"))
+    return json.loads(response.read().decode("ascii"))
 
 
 class _LoginSuccessful:
