@@ -9,6 +9,8 @@ automates toontown rewritten's login process
 
 ```sh
 $ pip3 install --user --upgrade tooncher
+# or
+$ pip3 install --user git+https://github.com/fphammerle/tooncher@master
 ```
 
 Optional: Install cpulimit to enable use of parameter `--cpu-limit`
