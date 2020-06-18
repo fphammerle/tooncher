@@ -40,9 +40,7 @@ def test_start_engine_mac():
             "/Users/me/Library/Application Support/Toontown Rewritten/Toontown Rewritten"
         ],
         check=True,
-        cwd=pathlib.PosixPath(
-            "/Users/me/Library/Application Support/Toontown Rewritten"
-        ),
+        cwd="/Users/me/Library/Application Support/Toontown Rewritten",
         env={
             "SOME": "VAR",
             "OTHER": "VALUE",
@@ -68,7 +66,7 @@ def test_start_engine_xorg():
     popen_mock.assert_called_once_with(
         args=["/opt/toontown-rewritter/TTREngine"],
         check=False,
-        cwd=pathlib.PosixPath("/opt/toontown-rewritter"),
+        cwd="/opt/toontown-rewritter",
         env={
             "TTR_GAMESERVER": "gameserver.tld",
             "TTR_PLAYCOOKIE": "cookie123",

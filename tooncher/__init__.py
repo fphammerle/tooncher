@@ -37,7 +37,10 @@ def start_engine(
         env["DYLD_LIBRARY_PATH"] = str(engine_path.parent.joinpath("Libraries.bundle"))
         env["DYLD_FRAMEWORK_PATH"] = str(engine_path.parent.joinpath("Frameworks"))
     return subprocess.Popen(
-        args=[str(engine_path)], cwd=engine_path.parent, env=env, **popen_kwargs,
+        args=[str(engine_path)],
+        cwd=str(engine_path.parent),  # str conversion for compatibility with python3.5
+        env=env,
+        **popen_kwargs,
     )
 
 
