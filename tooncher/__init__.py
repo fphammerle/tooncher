@@ -32,12 +32,16 @@ def start_engine(
     env = os.environ.copy()
     env["TTR_GAMESERVER"] = gameserver
     env["TTR_PLAYCOOKIE"] = playcookie
+    # .resolve(strict=True/False) is not available in python3.5
     engine_path = engine_path.resolve()
     if sys.platform == "darwin":
         env["DYLD_LIBRARY_PATH"] = str(engine_path.parent.joinpath("Libraries.bundle"))
         env["DYLD_FRAMEWORK_PATH"] = str(engine_path.parent.joinpath("Frameworks"))
     return subprocess.Popen(
-        args=[str(engine_path)], cwd=engine_path.parent, env=env, **popen_kwargs,
+        args=[str(engine_path)],
+        cwd=str(engine_path.parent),  # str conversion for compatibility with python3.5
+        env=env,
+        **popen_kwargs,
     )
 
 

@@ -25,24 +25,25 @@ def test_start_engine():
 @unittest.mock.patch("os.environ", {"SOME": "VAR", "OTHER": "VALUE"})
 def test_start_engine_mac():
     app_support_path = "/Users/me/Library/Application Support"
+    engine_path = pathlib.Path(app_support_path).joinpath(
+        "Toontown Rewritten", "Toontown Rewritten"
+    )
     with unittest.mock.patch("subprocess.Popen") as popen_mock:
         with unittest.mock.patch("sys.platform", "darwin"):
-            tooncher.start_engine(
-                engine_path=pathlib.PosixPath(
-                    app_support_path + "/Toontown Rewritten/Toontown Rewritten"
-                ),
-                gameserver="gameserver",
-                playcookie="cookie",
-                check=True,
-            )
+            # python3.5's pathlib.Path.resolve raises FileNotFoundError
+            with unittest.mock.patch(
+                "pathlib.Path.resolve", new=lambda p: p.with_suffix(".resolved"),
+            ):
+                tooncher.start_engine(
+                    engine_path=engine_path,
+                    gameserver="gameserver",
+                    playcookie="cookie",
+                    check=True,
+                )
     popen_mock.assert_called_once_with(
-        args=[
-            "/Users/me/Library/Application Support/Toontown Rewritten/Toontown Rewritten"
-        ],
+        args=[str(engine_path) + ".resolved"],
         check=True,
-        cwd=pathlib.PosixPath(
-            "/Users/me/Library/Application Support/Toontown Rewritten"
-        ),
+        cwd=str(engine_path.parent),
         env={
             "SOME": "VAR",
             "OTHER": "VALUE",
@@ -59,16 +60,21 @@ def test_start_engine_xorg():
     with unittest.mock.patch("subprocess.Popen") as popen_mock:
         with unittest.mock.patch("os.environ", {"XAUTHORITY": "/home/me/.Xauthority"}):
             with unittest.mock.patch("sys.platform", "linux"):
-                tooncher.start_engine(
-                    engine_path=pathlib.PosixPath("/opt/toontown-rewritter/TTREngine"),
-                    gameserver="gameserver.tld",
-                    playcookie="cookie123",
-                    check=False,
-                )
+                with unittest.mock.patch(  # python3.5
+                    "pathlib.Path.resolve", new=lambda p: p.with_suffix(".resolved"),
+                ):
+                    tooncher.start_engine(
+                        engine_path=pathlib.PosixPath(
+                            "/opt/toontown-rewritter/TTREngine"
+                        ),
+                        gameserver="gameserver.tld",
+                        playcookie="cookie123",
+                        check=False,
+                    )
     popen_mock.assert_called_once_with(
-        args=["/opt/toontown-rewritter/TTREngine"],
+        args=["/opt/toontown-rewritter/TTREngine.resolved"],
         check=False,
-        cwd=pathlib.PosixPath("/opt/toontown-rewritter"),
+        cwd="/opt/toontown-rewritter",
         env={
             "TTR_GAMESERVER": "gameserver.tld",
             "TTR_PLAYCOOKIE": "cookie123",

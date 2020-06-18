@@ -1,7 +1,9 @@
-build/
-.eggs/
-.pytest_cache/
+*.egg-info/
 *.pyc
 .coverage
+.eggs/
+.mypy_cache/
+.pytest_cache/
+build/
 dist/
-*.egg-info/
+tags/
