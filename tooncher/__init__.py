@@ -32,6 +32,7 @@ def start_engine(
     env = os.environ.copy()
     env["TTR_GAMESERVER"] = gameserver
     env["TTR_PLAYCOOKIE"] = playcookie
+    # .resolve(strict=True/False) is not available in python3.5
     engine_path = engine_path.resolve()
     if sys.platform == "darwin":
         env["DYLD_LIBRARY_PATH"] = str(engine_path.parent.joinpath("Libraries.bundle"))
