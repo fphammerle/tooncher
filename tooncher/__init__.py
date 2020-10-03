@@ -53,20 +53,29 @@ def _api_request(
         data=urllib.parse.urlencode(params).encode("ascii") if params else None,
         headers={"User-Agent": "tooncher"},
     )
-    response = urllib.request.urlopen(
-        request,
-        context=None if validate_ssl_cert else ssl._create_unverified_context(),
-    )
+    if validate_ssl_cert is False:  # explicit check to avoid catching None
+        # > To revert to [...] unverified behavior ssl._create_unverified_context()
+        # > can be passed to the context parameter.
+        # https://docs.python.org/3.8/library/http.client.html
+        ssl_context: typing.Optional[ssl.SSLContext] = (
+            # pylint: disable=protected-access; recommended in python docs
+            ssl._create_unverified_context()
+        )
+    else:
+        ssl_context = None
+    response = urllib.request.urlopen(request, context=ssl_context)
     return json.loads(response.read().decode("ascii"))
 
 
 class _LoginSuccessful:
+    # pylint: disable=too-few-public-methods; dataclass
     def __init__(self, playcookie: str, gameserver: str):
         self.playcookie = playcookie
         self.gameserver = gameserver
 
 
 class _LoginDelayed:
+    # pylint: disable=too-few-public-methods; dataclass
     def __init__(self, queue_token: str):
         self.queue_token = queue_token
 

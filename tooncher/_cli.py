@@ -59,6 +59,7 @@ def run(
 
 class _EnvDefaultArgparser(argparse.ArgumentParser):
     def add_argument(self, *args, envvar=None, **kwargs):
+        # pylint: disable=arguments-differ; using *args & **kwargs to catch all
         if envvar:
             envvar_value = os.environ.get(envvar, None)
             if envvar_value:
