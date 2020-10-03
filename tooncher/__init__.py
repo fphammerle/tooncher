@@ -57,10 +57,10 @@ def _api_request(
         # > To revert to [...] unverified behavior ssl._create_unverified_context()
         # > can be passed to the context parameter.
         # https://docs.python.org/3.8/library/http.client.html
-        ssl_context: typing.Optional[ssl.SSLContext] = (
+        ssl_context = (
             # pylint: disable=protected-access; recommended in python docs
             ssl._create_unverified_context()
-        )
+        )  # type: typing.Optional[ssl.SSLContext]
     else:
         ssl_context = None
     response = urllib.request.urlopen(request, context=ssl_context)
