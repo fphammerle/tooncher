@@ -51,3 +51,4 @@ jobs:
         PYTHON_VERSION: ${{ matrix.python-version }}
     - run: pipenv graph
     - run: pipenv run pytest --cov=tooncher --cov-report=term-missing --cov-fail-under=63
+    - run: pipenv run mypy tooncher tests
