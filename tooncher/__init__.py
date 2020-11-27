@@ -99,14 +99,17 @@ def _login(
     else:
         raise Exception("either specify username or queue token")
     resp_data = _api_request(
-        url=_LOGIN_API_URL, params=req_params, validate_ssl_cert=validate_ssl_cert,
+        url=_LOGIN_API_URL,
+        params=req_params,
+        validate_ssl_cert=validate_ssl_cert,
     )
     if resp_data["success"] == "true":
         return _LoginSuccessful(
-            playcookie=resp_data["cookie"], gameserver=resp_data["gameserver"],
+            playcookie=resp_data["cookie"],
+            gameserver=resp_data["gameserver"],
         )
     if resp_data["success"] == "delayed":
-        return _LoginDelayed(queue_token=resp_data["queueToken"],)
+        return _LoginDelayed(queue_token=resp_data["queueToken"])
     raise Exception(repr(resp_data))
 
 
@@ -118,11 +121,14 @@ def launch(
     cpu_limit_percent: typing.Optional[int] = None,
 ) -> None:
     result = _login(
-        username=username, password=password, validate_ssl_cert=validate_ssl_certs,
+        username=username,
+        password=password,
+        validate_ssl_cert=validate_ssl_certs,
     )
     if isinstance(result, _LoginDelayed):
         result = _login(
-            queue_token=result.queue_token, validate_ssl_cert=validate_ssl_certs,
+            queue_token=result.queue_token,
+            validate_ssl_cert=validate_ssl_certs,
         )
     if not isinstance(result, _LoginSuccessful):
         raise Exception("unexpected response: {!r}".format(result))

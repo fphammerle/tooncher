@@ -32,7 +32,8 @@ def test_start_engine_mac():
         with unittest.mock.patch("sys.platform", "darwin"):
             # python3.5's pathlib.Path.resolve raises FileNotFoundError
             with unittest.mock.patch(
-                "pathlib.Path.resolve", new=lambda p: p.with_suffix(".resolved"),
+                "pathlib.Path.resolve",
+                new=lambda p: p.with_suffix(".resolved"),
             ):
                 tooncher.start_engine(
                     engine_path=engine_path,
@@ -61,7 +62,8 @@ def test_start_engine_xorg():
         with unittest.mock.patch("os.environ", {"XAUTHORITY": "/home/me/.Xauthority"}):
             with unittest.mock.patch("sys.platform", "linux"):
                 with unittest.mock.patch(  # python3.5
-                    "pathlib.Path.resolve", new=lambda p: p.with_suffix(".resolved"),
+                    "pathlib.Path.resolve",
+                    new=lambda p: p.with_suffix(".resolved"),
                 ):
                     tooncher.start_engine(
                         engine_path=pathlib.PosixPath(
