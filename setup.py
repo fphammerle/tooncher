@@ -27,7 +27,8 @@ setuptools.setup(
         "Topic :: Utilities",
     ],
     entry_points={"console_scripts": ["tooncher = tooncher._cli:main"]},
-    install_requires=["pyyaml"],
+    # pipeline tests againsts pyyaml<5.4
+    install_requires=["pyyaml<6"],
     setup_requires=["setuptools_scm"],
     tests_require=["pytest"],
 )
