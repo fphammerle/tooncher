@@ -19,7 +19,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX :: Linux",
-        "Programming Language :: Python :: 3.5",
+        # .github/workflows/python.yml
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
@@ -28,6 +28,8 @@ setuptools.setup(
         "Topic :: Utilities",
     ],
     entry_points={"console_scripts": ["tooncher = tooncher._cli:main"]},
+    # f-strings, var type hints & enforce kwargs with *
+    python_requires=">=3.6",
     # pipeline tests againsts pyyaml<5.4
     install_requires=["pyyaml<6"],
     setup_requires=["setuptools_scm"],

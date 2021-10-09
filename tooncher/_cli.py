@@ -27,7 +27,7 @@ def run(
     cpu_limit_percent=None,
 ):
     if os.path.exists(config_path):
-        with open(config_path) as config_file:
+        with open(config_path, encoding="utf8") as config_file:
             config = yaml.safe_load(config_file.read())
     else:
         config = {}
@@ -43,11 +43,9 @@ def run(
         )
     accounts = [a for a in config.get("accounts", []) if a["username"] == username]
     if not accounts:
-        raise ValueError("username {!r} was not found in config file".format(username))
+        raise ValueError(f"username {username!r} was not found in config file")
     if len(accounts) > 1:
-        raise ValueError(
-            "multiple entries for username {!r} in config file".format(username)
-        )
+        raise ValueError(f"multiple entries for username {username!r} in config file")
     tooncher.launch(
         engine_path=pathlib.Path(engine_path),
         username=accounts[0]["username"],

@@ -16,7 +16,7 @@ def test_cli_help():
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
-    assert b"optional arguments:" in proc_info.stdout
+    assert proc_info.stdout.startswith(b"usage: tooncher ")
     assert not proc_info.stderr
 
 
@@ -25,7 +25,7 @@ def test_cli_help():
 def test_engine_path_arg(run_mock):
     with patch("sys.argv", ["", "--engine-path", "/opt/ttr/TTREngine", "username"]):
         tooncher._cli.main()
-    assert run_mock.call_count == 1
+    run_mock.assert_called_once()
     args, kwargs = run_mock.call_args
     assert not args
     assert kwargs["engine_path"] == "/opt/ttr/TTREngine"
@@ -36,7 +36,7 @@ def test_engine_path_arg(run_mock):
 def test_engine_path_env(run_mock):
     with patch("sys.argv", ["", "username"]):
         tooncher._cli.main()
-    assert run_mock.call_count == 1
+    run_mock.assert_called_once()
     args, kwargs = run_mock.call_args
     assert not args
     assert kwargs["engine_path"] == "/opt/ttr/TTREnvine"
@@ -47,7 +47,7 @@ def test_engine_path_env(run_mock):
 def test_engine_path_arg_env(run_mock):
     with patch("sys.argv", ["", "--engine-path", "/opt/ttr/TTREngine", "username"]):
         tooncher._cli.main()
-    assert run_mock.call_count == 1
+    run_mock.assert_called_once()
     args, kwargs = run_mock.call_args
     assert not args
     assert kwargs["engine_path"] == "/opt/ttr/TTREngine"
@@ -67,7 +67,7 @@ def test_engine_path_config(launch_mock, tmpdir):
     )
     with patch("sys.argv", ["", "--config", config_file.strpath, "someone"]):
         tooncher._cli.main()
-    assert launch_mock.call_count == 1
+    launch_mock.assert_called_once()
     args, kwargs = launch_mock.call_args
     assert not args
     assert kwargs["engine_path"] == pathlib.Path("/opt/conf/TTR")
@@ -87,7 +87,7 @@ def test_engine_path_env_config(launch_mock, tmpdir):
     )
     with patch("sys.argv", ["", "--config", config_file.strpath, "someone"]):
         tooncher._cli.main()
-    assert launch_mock.call_count == 1
+    launch_mock.assert_called_once()
     args, kwargs = launch_mock.call_args
     assert not args
     assert kwargs["engine_path"] == pathlib.Path("/opt/ttr/TTREnvine")

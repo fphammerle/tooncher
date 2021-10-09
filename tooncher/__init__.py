@@ -46,7 +46,7 @@ def start_engine(
 
 
 def _api_request(
-    url: str, params: typing.Optional[dict] = None, validate_ssl_cert: bool = True
+    *, url: str, params: typing.Optional[dict] = None, validate_ssl_cert: bool = True
 ):
     request = urllib.request.Request(
         url=url,
@@ -57,14 +57,14 @@ def _api_request(
         # > To revert to [...] unverified behavior ssl._create_unverified_context()
         # > can be passed to the context parameter.
         # https://docs.python.org/3.8/library/http.client.html
-        ssl_context = (
+        ssl_context: typing.Optional[ssl.SSLContext] = (
             # pylint: disable=protected-access; recommended in python docs
             ssl._create_unverified_context()
-        )  # type: typing.Optional[ssl.SSLContext]
+        )
     else:
         ssl_context = None
-    response = urllib.request.urlopen(request, context=ssl_context)
-    return json.loads(response.read().decode("ascii"))
+    with urllib.request.urlopen(request, context=ssl_context) as response:
+        return json.loads(response.read().decode("ascii"))
 
 
 class _LoginSuccessful:
@@ -81,6 +81,7 @@ class _LoginDelayed:
 
 
 def _login(
+    *,
     username: typing.Optional[str] = None,
     password: typing.Optional[str] = None,
     queue_token: typing.Optional[str] = None,
@@ -131,14 +132,14 @@ def launch(
             validate_ssl_cert=validate_ssl_certs,
         )
     if not isinstance(result, _LoginSuccessful):
-        raise Exception("unexpected response: {!r}".format(result))
+        raise Exception(f"unexpected response: {result!r}")
     process = start_engine(
         engine_path=engine_path,
         gameserver=result.gameserver,
         playcookie=result.playcookie,
     )
     if cpu_limit_percent is not None:
-        subprocess.Popen(
+        subprocess.run(
             args=[
                 "cpulimit",
                 "--pid",
@@ -146,6 +147,7 @@ def launch(
                 "--limit",
                 str(cpu_limit_percent),
                 # '--verbose',
-            ]
+            ],
+            check=True,
         )
     process.wait()
