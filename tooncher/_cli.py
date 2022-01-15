@@ -25,7 +25,7 @@ def run(
     engine_path=None,
     validate_ssl_certs=True,
     cpu_limit_percent=None,
-):
+) -> None:
     if os.path.exists(config_path):
         with open(config_path, encoding="utf8") as config_file:
             config = yaml.safe_load(config_file.read())
@@ -66,7 +66,7 @@ class _EnvDefaultArgparser(argparse.ArgumentParser):
         super().add_argument(*args, **kwargs)
 
 
-def _init_argparser():
+def _init_argparser() -> _EnvDefaultArgparser:
     argparser = _EnvDefaultArgparser(description=None)
     argparser.add_argument("username")
     argparser.add_argument(

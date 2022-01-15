@@ -20,7 +20,6 @@ setuptools.setup(
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX :: Linux",
         # .github/workflows/python.yml
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
@@ -29,8 +28,9 @@ setuptools.setup(
         "Topic :: Utilities",
     ],
     entry_points={"console_scripts": ["tooncher = tooncher._cli:main"]},
-    # f-strings, var type hints & enforce kwargs with *
-    python_requires=">=3.6",
+    # >=3.6 for f-strings, var type hints & enforcing kwargs with *
+    # >=3.7 for dataclasses
+    python_requires=">=3.7",
     # pipeline tests againsts pyyaml<5.4
     install_requires=["pyyaml<6"],
     setup_requires=["setuptools_scm"],

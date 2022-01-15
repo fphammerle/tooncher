@@ -1,3 +1,4 @@
+import dataclasses
 import datetime
 import json
 import os
@@ -67,17 +68,15 @@ def _api_request(
         return json.loads(response.read().decode("ascii"))
 
 
+@dataclasses.dataclass
 class _LoginSuccessful:
-    # pylint: disable=too-few-public-methods; dataclass
-    def __init__(self, playcookie: str, gameserver: str):
-        self.playcookie = playcookie
-        self.gameserver = gameserver
+    playcookie: str
+    gameserver: str
 
 
+@dataclasses.dataclass
 class _LoginDelayed:
-    # pylint: disable=too-few-public-methods; dataclass
-    def __init__(self, queue_token: str):
-        self.queue_token = queue_token
+    queue_token: str
 
 
 def _login(
