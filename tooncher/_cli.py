@@ -7,7 +7,9 @@ import yaml
 
 import tooncher
 
-if sys.platform == "darwin":
+if (  # pylint: disable=consider-ternary-expression; bulky code format after black
+    sys.platform == "darwin"
+):
     _TOONTOWN_ENGINE_DEFAULT_PATH = os.path.join(
         os.path.expanduser("~"),
         "Library",
