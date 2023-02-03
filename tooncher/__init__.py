@@ -131,7 +131,7 @@ def launch(
             validate_ssl_cert=validate_ssl_certs,
         )
     if not isinstance(result, _LoginSuccessful):
-        raise Exception(f"unexpected response: {result!r}")
+        raise RuntimeError(f"unexpected response: {result!r}")
     process = start_engine(
         engine_path=engine_path,
         gameserver=result.gameserver,
