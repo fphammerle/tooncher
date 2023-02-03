@@ -110,7 +110,7 @@ def _login(
         )
     if resp_data["success"] == "delayed":
         return _LoginDelayed(queue_token=resp_data["queueToken"])
-    raise Exception(repr(resp_data))
+    raise RuntimeError(repr(resp_data))
 
 
 def launch(
