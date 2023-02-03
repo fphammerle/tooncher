@@ -97,7 +97,7 @@ def _login(
             "queueToken": queue_token,
         }
     else:
-        raise Exception("either specify username or queue token")
+        raise ValueError("either specify username or queue token")
     resp_data = _api_request(
         url=_LOGIN_API_URL,
         params=req_params,
