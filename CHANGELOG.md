@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- raise `ValueError` instead of `Exception` when incompatible combination of
+  arguments was given
+- raise `RuntimeError` instead of `Exception` when server send
+  unexpected / unsupported response
+
 ### Removed
 - compatibility with `python3.5` & `python3.6`
 

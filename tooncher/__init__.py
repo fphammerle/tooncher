@@ -97,7 +97,7 @@ def _login(
             "queueToken": queue_token,
         }
     else:
-        raise Exception("either specify username or queue token")
+        raise ValueError("either specify username or queue token")
     resp_data = _api_request(
         url=_LOGIN_API_URL,
         params=req_params,
@@ -110,7 +110,7 @@ def _login(
         )
     if resp_data["success"] == "delayed":
         return _LoginDelayed(queue_token=resp_data["queueToken"])
-    raise Exception(repr(resp_data))
+    raise RuntimeError(repr(resp_data))
 
 
 def launch(
@@ -131,7 +131,7 @@ def launch(
             validate_ssl_cert=validate_ssl_certs,
         )
     if not isinstance(result, _LoginSuccessful):
-        raise Exception(f"unexpected response: {result!r}")
+        raise RuntimeError(f"unexpected response: {result!r}")
     process = start_engine(
         engine_path=engine_path,
         gameserver=result.gameserver,
