@@ -31,8 +31,8 @@ setuptools.setup(
     # >=3.7 for dataclasses
     # python<3.8 untested
     python_requires=">=3.8",
-    # pipeline tests againsts pyyaml<5.4
-    install_requires=["pyyaml<6"],
+    # pipeline tests againsts pyyaml v6.0.1
+    install_requires=["pyyaml<7"],
     setup_requires=["setuptools_scm"],
     tests_require=["pytest"],
 )
