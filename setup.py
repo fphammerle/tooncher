@@ -29,8 +29,8 @@ setuptools.setup(
     entry_points={"console_scripts": ["tooncher = tooncher._cli:main"]},
     # >=3.6 for f-strings, var type hints & enforcing kwargs with *
     # >=3.7 for dataclasses
-    # python<3.8 untested
-    python_requires=">=3.8",
+    # python<3.9 untested
+    python_requires=">=3.9",
     # pipeline tests againsts pyyaml v6.0.1
     install_requires=["pyyaml<7"],
     setup_requires=["setuptools_scm"],
